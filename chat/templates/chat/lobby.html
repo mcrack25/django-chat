@@ -1,0 +1,121 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+    <title>CHAT</title>
+</head>
+<body>
+    <div class="chat">
+        <div class="chat__skeleton">
+            <div class="chat__sidebar">
+                <div class="chat__sidebar-header">
+                    <div class="chat__app-title">Чаты</div>
+                    <div class="chat__actions">
+                        <button type="button">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_3_81)">
+                                <path d="M20 2H4C2.9 2 2.01 2.9 2.01 4L2 22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM18 14H6V12H18V14ZM18 11H6V9H18V11ZM18 8H6V6H18V8Z" fill="#A9A9A9"/>
+                                </g>
+                                <defs>
+                                <clipPath id="clip0_3_81">
+                                <rect width="24" height="24" fill="white"/>
+                                </clipPath>
+                                </defs>
+                            </svg>
+                        </button>
+                        <button type="button">
+                            <svg width="5" height="20" viewBox="0 0 5 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle r="2.5" transform="matrix(-1 0 0 1 2.5 2.5)" fill="#A9A9A9"/>
+                                <circle r="2.5" transform="matrix(-1 0 0 1 2.5 9.375)" fill="#A9A9A9"/>
+                                <circle r="2.5" transform="matrix(-1 0 0 1 2.5 16.25)" fill="#A9A9A9"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <ul class="chat__list">
+                    <li class="chat__item">Магомедов Магомед Магомедович</li>
+                    <li class="chat__item">Ахмедов Ахмед Ахмедович</li>
+                    <li class="chat__item">Группа 1</li>
+                    <li class="chat__item">Группа 2</li>
+                </ul>
+            </div>
+            <div class="chat__content">
+                <div class="chat__content-header">
+                    <div class="chat__content-title">
+                        Иван
+                    </div>
+                </div>
+                <div class="chat__messages-box">
+                    <div class="chat__messages"></div>
+                </div>
+                <div class="chat__form">
+                    <div class="chat__content-left-buttons">
+                        <button>
+                            <svg width="40" height="40" viewBox="0 0 67 67" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_2_50)">
+                                <path d="M32.1041 5.58331C40.5908 5.58331 47.4583 12.4508 47.4583 20.9375L47.4583 50.25C47.4583 56.4196 42.4612 61.4166 36.2916 61.4166C30.1221 61.4166 25.125 56.4196 25.125 50.25L25.125 26.5208C25.125 22.6683 28.2516 19.5416 32.1041 19.5416C35.9566 19.5416 39.0833 22.6683 39.0833 26.5208L39.0833 47.4583L33.5 47.4583L33.5 26.2696C33.5 24.7341 30.7083 24.7341 30.7083 26.2696L30.7083 50.25C30.7083 53.3208 33.2208 55.8333 36.2916 55.8333C39.3625 55.8333 41.875 53.3208 41.875 50.25L41.875 20.9375C41.875 15.5496 37.4921 11.1666 32.1041 11.1666C26.7162 11.1666 22.3333 15.5496 22.3333 20.9375L22.3333 47.4583L16.75 47.4583L16.75 20.9375C16.75 12.4508 23.6175 5.58331 32.1041 5.58331Z"/>
+                                </g>
+                                <defs>
+                                <clipPath id="clip0_2_50">
+                                <rect width="67" height="67" fill="white" transform="translate(67) rotate(90)"/>
+                                </clipPath>
+                                </defs>
+                            </svg> 
+                        </button>
+                    </div>
+                    <div class="chat__input-box">
+                        <textarea class="chat__input" placeholder="Поздоровайтесь, чтобы начать общение"></textarea>
+                    </div>
+                    <div class="chat__button-box">
+                        <button type="button" class="chat__send-btn">
+                            <svg width="40" height="40" viewBox="0 0 51 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M46.1903 19.9836C51.7327 23.0194 51.7327 30.9806 46.1903 34.0164L12.3432 52.5559C7.01185 55.4761 0.499997 51.6182 0.499998 45.5395L0.499999 8.46047C0.499999 2.38177 7.01186 -1.47612 12.3432 1.44407L46.1903 19.9836Z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const url = `ws://${window.location.host}/ws/socket-server`;
+        const chatSocket = new WebSocket(url);
+        const chat = document.querySelector('.chat');
+        const sendBtn = chat.querySelector('.chat__send-btn');
+        const input = chat.querySelector('.chat__input');
+        
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            console.log('Data: ', data);
+
+            if (data.type === 'chat') {
+                const messages = chat.querySelector('.chat__messages');
+                messages.insertAdjacentHTML(
+                    'beforeend', 
+                    `<div class="chat__message ${data.sender_id === data.my_id ? 'chat__message_me' : '' }">
+                        <div class="chat__message-title">${data.sender_name}</div>
+                        <div class="chat__message-text">${data.message}</div>
+                    </div>`
+                )
+            }
+        }
+
+        sendBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const message = input.value;
+            if (message) {
+                chatSocket.send(JSON.stringify({
+                    'message': message
+                }));
+                input.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
