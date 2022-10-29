@@ -1,0 +1,15 @@
+Index: .gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+--- /dev/null	(date 1667053238940)
++++ b/.gitignore	(date 1667053238940)
+@@ -0,0 +1,4 @@
++.DS_Store
++__pycache__/
++staticfiles/
++media/
+\ No newline at end of file

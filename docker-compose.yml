@@ -17,6 +17,7 @@ services:
         - VIRTUAL_HOST=chatproject.localhost
       depends_on:
         - db
+        - nginx-proxy
       volumes:
         - .:/code/
       ports:
